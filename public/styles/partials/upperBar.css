@@ -1,0 +1,13 @@
+#upperBar{
+  background: linear-gradient(to left, #955DFF, #6FAAFF);
+  height: 56px;
+  display:flex;
+  width:100%;
+}
+a{
+  color:white;
+  font-size: 19px;
+}
+p{
+  margin: auto;
+}
