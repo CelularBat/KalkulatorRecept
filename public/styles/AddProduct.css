@@ -12,7 +12,7 @@ body {
    grid-template-columns: 1fr 1fr;
 }
 
-label{
+label[for]{
   text-align:right;
   border-bottom: solid 1px black;
 }
@@ -78,3 +78,23 @@ input[type=number]{
     padding: 5px;
     border-radius:8px;
 }
+
+/* Datatables */
+
+td.action{
+ display:grid;
+ grid-template-columns: 1fr 1fr;
+}
+
+.searchColumnInput {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+}
+
+.btn_delete{
+  color: red;
+}
+
+
+

@@ -9,8 +9,7 @@
 <body>
 
 <div id="upperBar"><%- include('partials/upperBar') -%></div>
-
-<link href="partials/AddProduct.css" rel="stylesheet" type="text/css">
+<link href="AddProduct.css" rel="stylesheet" type="text/css">
 <div class="main_cointainer">
     
 
@@ -27,12 +26,12 @@
             <input type="text" name="brand" id="Marka">
             <label for="category">Kategoria: &nbsp;</label>
             <input type="text" name="category" id="Kategoria">
-            <label><b>Wartość</b></label> <label class="lab_l"><b>&nbsp;energetyczna:</b></label>      
+            <label for=""><b>Wartość</b></label> <label class="lab_l"><b>&nbsp;energetyczna:</b></label>      
             <label for="kj">*kj: &nbsp;</label>
             <input type="number" name="kj" id="kj" required>
             <label for="kcal">*kcal: &nbsp;</label>
             <input type="number" name="kcal" id="kcal" required>
-            <label><b>Wartość odżywcza</b></label> <label class="lab_l"><b>&nbsp;w 100g/ml:</b></label>
+            <label for=""><b>Wartość odżywcza</b></label> <label class="lab_l"><b>&nbsp;w 100g/ml:</b></label>
             <label for="fat">*Tłuszcze: &nbsp;</label>
             <input type="number" name="fat" id="Tłuszcz" required>
             <label for="carb">*Węglowodany: &nbsp;</label>
@@ -46,7 +45,7 @@
             <label for="fiber">Błonnik: &nbsp;</label>
             <input type="number" name="fiber" id="Błonnik">
             <label for="public">Dodaj jako publiczne?</label>
-            <input type="checkbox" name="public" id="Publiczny">     
+            <input type="checkbox" name="public" id="Publiczny" value="true">     
         
             <label for="link">Link do produktu: &nbsp;</label>
             <input type="text" id="link" name="link">
@@ -61,9 +60,9 @@
       
         <h2> Twoje produkty w bazie danych:</h2>
         <div id="uList">
-          <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
           <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-          <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+          <link href="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/sp-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet"> 
+          <script src="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/sp-2.2.0/sl-1.7.0/datatables.min.js"></script>
           
           <table id="dataTable" class="display">
               <thead>
@@ -79,11 +78,29 @@
                       <th>Bia</th>
                       <th>Bło</th>
                       <th>Sól</th>
-                      <th>akcja</th>
+                      <th>Pub</th>
+                     
                   </tr>
               </thead>
               <tbody>
               </tbody>
+              <tfoot>
+                  <tr>
+                      <th>Kategoria</th>
+                      <th>Nazwa</th>
+                      <th>Marka</th>
+                      <th>kj</th>
+                      <th>kcal</th>
+                      <th>Tłu</th>
+                      <th>Węg</th>
+                      <th>Cuk</th>
+                      <th>Bia</th>
+                      <th>Bło</th>
+                      <th>Sól</th>
+                      <th>Pub</th>
+                     
+                  </tr>
+              </tfoot>
           </table>
         </div>
       
@@ -109,6 +126,23 @@
               </thead>
               <tbody>
               </tbody>
+                <tfoot>
+                  <tr>
+                      <th>Kategoria</th>
+                      <th>Nazwa</th>
+                      <th>Marka</th>
+                      <th>kj</th>
+                      <th>kcal</th>
+                      <th>Tłu</th>
+                      <th>Węg</th>
+                      <th>Cuk</th>
+                      <th>Bia</th>
+                      <th>Bło</th>
+                      <th>Sól</th>
+                      <th>Autor</th>
+                     
+                  </tr>
+              </tfoot>
           </table>
           
         </div>

@@ -13,8 +13,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.json());
 
-app.listen(3000,()=>{
-  console.log('Listening on port 3000!');
+app.listen(3000,function(){
+  console.log('Listening on', JSON.stringify(this.address(),null,2));
 });
 
 let ejs = require("ejs");
@@ -41,6 +41,7 @@ AccountManagerSetup(app, User);
 
 app.use(express.static("public/styles"));
 app.use(express.static("public/scripts"));
+app.use(express.static("public/resources"));
 app.get("/", (req, res) => {
   res.render(__dirname + "/views/main");
 });
@@ -57,15 +58,17 @@ app.get("/test", (req, res) => {
 });
 
 app.get("/favicon.ico", (req, res) => {
-  res.sendFile(__dirname + "/views/favicon.ico");
+  res.sendFile(__dirname + "/resources/favicon.ico");
 });
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 // FOOD API
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+let {FoodAPI_Setup} = require("./server/FoodAPI");
+FoodAPI_Setup(app,Food);
 
-
+/*
 function AddProduct(product,done) {
   let f = new Food(product);
   f.save((err,data)=>{
@@ -174,9 +177,9 @@ app.get("/api/getpubp",(req,res)=>{
     });  
   });
 
-
+*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ADMIN TOOLS
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 adm = require("./AdminTools");
-// adm.PrintAllExcept(Food, {author: ['test','NIEZALOG'],name: 'jajko'} );
+ //adm.PrintAllExcept(Food,{} );

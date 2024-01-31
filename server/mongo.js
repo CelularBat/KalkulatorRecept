@@ -1,4 +1,4 @@
-const unregisteredAccountName = "NIEZALOG";
+const {unregisteredAccountName} = require('./config');
 
 var mongoose = require("mongoose");
 
@@ -34,7 +34,7 @@ const foodSchema = new mongoose.Schema({
   protein: {type:Number, required:true},
   salt: {type:Number, required:false},
   fiber: Number,
-  publ: {type:Boolean, default:true},
+  public: {type:Boolean, default:true},
   link: String
 });
 foodSchema.index({name:1, brand:1},{unique:1}); // makes brand + name combination unique.
@@ -50,7 +50,7 @@ foodSchema.pre('save',function(next){
       if (type instanceof mongoose.Schema.Types.String && (document[path]) ) {
         document[path] = SanitizeFoodStr(document[path]);      
       } else if ((type instanceof mongoose.Schema.Types.Number && (document[path]) )) {
-        document[path] = Math.abs(document[path]);
+        document[path] = Math.min(Math.abs(document[path]),5000);
       } 
     });
   
