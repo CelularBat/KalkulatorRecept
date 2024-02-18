@@ -144,8 +144,8 @@ function dt_createColumnSearch(colums_idxArr , dataTable) { //colums_idxArr,
    
    // remove general search
    $(`#${dtID}_filter`).css({display: 'none'});
-   // move <show number> to bottom
-   $(`#${dtID}_length`).insertAfter(`#${dtID}_info`);
+   // move <show X entries> to bottom
+   //$(`#${dtID}_length`).insertBefore(`#${dtID}_wrapper`);
    //disapear <showing x entries>
    $(`#${dtID}_info`).css({display: 'none'});
    
@@ -232,7 +232,8 @@ function GetUserProducts() {
               dt_createActionKeys(row, this);
           },      
           "initComplete": function () {
-            dt_createColumnSearch([0,1,2],this); 
+            dt_createColumnSearch([0,1,2],this);
+            
           }
        });
    

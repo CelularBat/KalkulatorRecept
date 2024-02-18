@@ -1,10 +1,5 @@
 html, body {
-  padding: 0px;
-  margin: 0px;
-  background: #F8F2ED;
-  font-family: "Raleway", sans-serif;
-  color: #FFF;
-  height: 100%;
+
 }
 
 .container {
@@ -24,6 +19,13 @@ html, body {
   -webkit-transform: translateZ(0px);
   z-index: 9;
   position: relative;
+  
+  padding: 0px;
+
+  background: #F8F2ED;
+  font-family: "Raleway", sans-serif;
+  color: #FFF;
+  height: 100%;
 }
 .container * {
   box-sizing: border-box;

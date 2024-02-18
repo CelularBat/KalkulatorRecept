@@ -14,7 +14,7 @@
     
 
     
-    <div class="divcol" id="addProduct" target="_blank">
+    <div class="divcol" id="addProduct">
       <h2> Dodaj produkt:</h2>
       <div id="addProductForm">
          <form method="post" action="/api/addp" target="_blank" id="addPrForm">
@@ -33,17 +33,17 @@
             <input type="number" name="kcal" id="kcal" required>
             <label for=""><b>Wartość odżywcza</b></label> <label class="lab_l"><b>&nbsp;w 100g/ml:</b></label>
             <label for="fat">*Tłuszcze: &nbsp;</label>
-            <input type="number" name="fat" id="Tłuszcz" required>
+            <input type="number" name="fat" id="Tłuszcz" required step="0.1" required pattern="^\d+(,\d{1})?$">
             <label for="carb">*Węglowodany: &nbsp;</label>
-            <input type="number" name="carb" id="Węglowodany" required>
+            <input type="number" name="carb" id="Węglowodany" required step="0.1" pattern="^\d+(,\d{1})?$">
             <label for="sugar">*Cukry: &nbsp;</label>
-            <input type="number" name="sugar" id="Cukier" required>
+            <input type="number" name="sugar" id="Cukier" required step="0.1" pattern="^\d+(,\d{1})?$">
             <label for="protein">*Białko: &nbsp;</label>
-            <input type="number" name="protein" id="Białko" required>
+            <input type="number" name="protein" id="Białko" required step="0.1" pattern="^\d+(,\d{1})?$">
             <label for="salt">*Sól: &nbsp;</label>
-            <input type="number" name="salt" id="Sól">
+            <input type="number" name="salt" id="Sól" step="0.1" pattern="^\d+(,\d{1})?$">
             <label for="fiber">Błonnik: &nbsp;</label>
-            <input type="number" name="fiber" id="Błonnik">
+            <input type="number" name="fiber" id="Błonnik" step="0.1" pattern="^\d+(,\d{1})?$">
             <label for="public">Dodaj jako publiczne?</label>
             <input type="checkbox" name="public" id="Publiczny" value="true">     
         

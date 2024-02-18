@@ -1,0 +1,30 @@
+#main_container{
+  display:grid;
+  grid-template-columns: 2fr 5px 1fr;
+}
+.divcol{
+  background-color: green;
+  text-align: center;
+}
+#AddRecipe{
+
+  border: solid 3px black;
+  padding: 10px;
+  background: linear-gradient(90deg, #e27474, #D5D531, #008000);
+  width: 100%;
+  border-radius:25px;
+}
+#ProductList{
+  
+}
+.searchColumnInput {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+}
+
+table{
+  display: inline-table;
+  font-size:90%;
+  max-width:100%;
+}
