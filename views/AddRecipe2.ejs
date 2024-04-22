@@ -4,10 +4,12 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/sp-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet"> 
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/sp-2.2.0/sl-1.7.0/datatables.min.js"></script>
-   <!--
+   
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+   
+   <!--
+   <link href="AddRecipe.css" rel="stylesheet" type="text/css">
    -->
-    <link href="AddRecipe.css" rel="stylesheet" type="text/css">
     <script src="AddRecipe.js"></script>
     
 </head>
@@ -19,49 +21,20 @@
     </div>
     
     
-    <div id="main_container">
-                
-        <div class="divcol" id="AddRecipe">
-            <div id="RecipeForm" class="divsub">
+    <div id="container">
+        <div class="col-sm divcol" id="AddRecipe">
+            <div id="RecipeForm">
                 <h2>Nowa receptura</h2>
-                
-                <table id="dataTable_recipe" class="display">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Nazwa</th>
-                            <th>Marka</th>
-                            <th>Porcja</th>
-                
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                             <th></th>
-                            <th>Nazwa</th>
-                            <th>Marka</th>
-                            <th>Porcja</th>
-               
-                        </tr>
-                    </tfoot>
-                </table>
             </div>
         </div>
-        
-        
-        <div class="divseparator"></div>
-        
-        
-        <div class="divcol" id="ProductList">
+                
+        <div class="col-sm divcol" id="ProductList">
             
-            <div id="uList" class="divsub">
+            <div id="uList">
                 <h2>Lista Twoich produktów</h2>
                 <table id="dataTable" class="display">
                     <thead>
                         <tr>
-                            <th></th>
                             <th>Kategoria</th>
                             <th>Nazwa</th>
                             <th>Marka</th>
@@ -79,7 +52,6 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                             <th></th>
                             <th>Kategoria</th>
                             <th>Nazwa</th>
                             <th>Marka</th>
@@ -96,12 +68,10 @@
                 </table>
             </div>
         
-            <div id="pList" class="divsub">
-                <h2>Produkty w bazie</h2>
+            <div id="pList">
                 <table id="dataTablePub" class="display">
                 <thead>
                     <tr>
-                        <th></th>
                         <th>Kategoria</th>
                         <th>Nazwa</th>
                         <th>Marka</th>
@@ -120,7 +90,6 @@
                 </tbody>
                   <tfoot>
                     <tr>
-                        <th></th>
                         <th>Kategoria</th>
                         <th>Nazwa</th>
                         <th>Marka</th>
@@ -141,6 +110,7 @@
             </div>        
          
         </div>
+        
         
 
         

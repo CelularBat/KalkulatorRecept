@@ -9,11 +9,11 @@ function dt_createColumnSearch(colums_idxArr , dataTable) { //colums_idxArr,
    const dtID=dt_getID(dataTable);
    
    // remove general search
-   $(`#${dtID}_filter`).css({display: 'none'});
+   //$(`#${dtID}_filter`).css({display: 'none'});
    // move <show X entries> to bottom
    //$(`#${dtID}_length`).insertBefore(`#${dtID}_wrapper`);
    //disapear <showing x entries>
-   $(`#${dtID}_info`).css({display: 'none'});
+   //$(`#${dtID}_info`).css({display: 'none'});
    
      
    dataTable.api().columns().every(function(idx){
@@ -36,32 +36,31 @@ function dt_createColumnSearch(colums_idxArr , dataTable) { //colums_idxArr,
      
 }
 
-function dt_createActionKeys(row,dataTable){
-  let td = document.createElement('td');
-  td.className = 'action';
+function dt_insertActionKeys(row,dataTable){
   let b_a = Object.assign(document.createElement('button'), {
-    className: 'btn_add',
+    className: 'btn',
     type: 'button',
-    textContent: 'Add'
+    textContent: '＋',
+    id: 'btn_add'
   });
-
-  td.appendChild(b_a);
-  row.appendChild(td);
   
-  let th_footer = dataTable.api().table().footer().getElementsByTagName('tr')[0];
+  let td = row.cells[0];
+  td.appendChild(b_a);
 
 }
 
 function GetUserProducts() {
-  //var th_header = $('#dataTable thead tr')[0];
   
   fetch('/api/getuserp').then(response=>response.json()).then( (response)=>{
     
      _g_tableUser = $('#dataTable').DataTable({
-             
+            
+           language: { url: 'https://cdn.datatables.net/plug-ins/2.0.5/i18n/pl.json'},
+           dom: 'lp',
            data: response,
            "autoWidth": false,
            columns: [
+               { "data": null, "defaultContent": "", "orderable": false}, //empty col
                { data: 'category' },
                { data: 'name' },
                { data: 'brand' },
@@ -77,15 +76,11 @@ function GetUserProducts() {
 
            // Add action buttons to row
           "createdRow": function( row, data, dataIndex ) {
-              dt_createActionKeys(row, this);
-              
+             dt_insertActionKeys(row,dataTable);    
           },
           
           "initComplete": function () {
-            dt_createColumnSearch([0,1,2],this);
-            this.columns.adjust().draw();
-            
-            
+            dt_createColumnSearch([1,2,3],this);     
           }
           
        });
@@ -95,3 +90,50 @@ function GetUserProducts() {
 }
 
 GetUserProducts();
+
+function GetPublicProducts() {
+  var th_header = $('#dataTablePub')
+  fetch('/api/getpubp').then(response=>response.json()).then( (response)=>{
+      _g_tablePublic=$('#dataTablePub').DataTable({
+        
+          language: { url: 'https://cdn.datatables.net/plug-ins/2.0.5/i18n/pl.json'},
+          dom: 'lp',
+           data: response,
+           "autoWidth": false,
+           columns: [
+               { "data": null, "defaultContent": "", "orderable": false}, //empty col
+               { data: 'category' },
+               { data: 'name' },
+               { data: 'brand' },
+               { data: 'kj' },
+               { data: 'kcal' },
+               { data: 'fat' },
+               { data: 'carb' },
+               { data: 'sugar' },
+               { data: 'protein' },
+               { data: 'fiber' },
+               { data: 'salt' },
+               { data: 'author' }
+           ],
+           // Add action buttons to row
+           "createdRow": function( row, data, dataIndex ) {
+              dt_insertActionKeys(row, this);
+           },
+           
+           "initComplete": function () {
+            dt_createColumnSearch([1,2,3,12],this); 
+          }
+          
+       });
+    return;
+    });
+}
+
+GetPublicProducts();
+function updateDatatable(datatable) {
+    fetch('/api/getuserp').then(response=>response.json()).then((response)=>{
+    datatable.clear();
+    datatable.rows.add(response);
+    datatable.draw();
+  });    
+}

@@ -1,4 +1,4 @@
-const {unregisteredAccountName} = require('./config');
+const {c_UnregisteredAccountName} = require('./config');
 
 var mongoose = require("mongoose");
 require('mongoose-type-url');
@@ -29,7 +29,7 @@ const foodSchema = new mongoose.Schema({
   name: {type:String, required:true},
   brand: String,
   category: String,
-  author: {type: String,default: unregisteredAccountName},
+  author: {type: String,default: c_UnregisteredAccountName},
   kj: {type:Number, required:true},
   kcal: {type:Number, required:true},
   fat: {type:Number, required:true},
@@ -44,7 +44,7 @@ const foodSchema = new mongoose.Schema({
 foodSchema.index({name:1, brand:1},{unique:1}); // makes brand + name combination unique.
 
 
-const productPortionScheme = new mongoose.Schema({
+const productPortionSchema = new mongoose.Schema({
       productId: {type: Number, required:true},
       weight: {type: Number, required:true}
 });
@@ -52,9 +52,9 @@ const productPortionScheme = new mongoose.Schema({
 const recipeSchema = new mongoose.Schema({
   name: {type:String, required:true},
   description: {type:String, required:true},
-  productsList: [ productPortionScheme ],
+  productsList: [ productPortionSchema ],
   photos: [mongoose.SchemaTypes.Url],
-  author: {type: String, default: unregisteredAccountName},
+  author: {type: String, default: c_UnregisteredAccountName},
   public: {type:Boolean, default:true}
 });
 
@@ -62,6 +62,8 @@ const recipeSchema = new mongoose.Schema({
 // FUNCTIONS
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// FOOD
+///////
 function SanitizeFoodStr(str) {
   return str.slice(0,30).replace(/[^\s\d\w\-_+\(\)]/,'');
 }
@@ -80,20 +82,49 @@ foodSchema.pre('save',function(next){
   next();
 });
 
+// RECIPE
+/////////
+
 // https://www.zhenghao.io/posts/verify-image-url
-function verifyIfImg(url) {
+async function verifyIfImg(url) {
   return fetch(url, {method: 'HEAD'}).then( (res) => {
-    return res.headers.get('Content-Type').startsWith('image')
+    return res.headers.get('Content-Type').startsWith('image');
   });
 }
 
-/*recipeSchema.pre('save',function(next){
-   let ph = this[photos];
-   for (x in ph){
-      x.then(());
+// Check if img url points to real image
+recipeSchema.pre('save',async function(next){
+   let input_photo_list = this[photos];
+   let filtered_photo_list = [];
+   let promise_array = [];
+   for (let idx in input_photo_list){
+      let promiseResult = verifyIfImg(input_photo_list[idx])
+      .then( (res)=>{
+        if (res) {
+            filtered_photo_list.push(input_photo_list[idx]);
+        }
+        else {
+          console.log("recipeSchema.pre :: " + input_photo_list[idx] + " is not a valid img");
+        }
+        promise_array.push(promiseResult); // because we dont want rejected promises in array
+      }
+      ,(rej)=>{
+        console.log("recipeSchema.pre :: url error: " + rej);      
+      }
+      );
+      
    }
+   // wait till all promises in the loop got resolved
+   await Promise.all(promise_array);
+   this[photos] = filtered_photo_list;
+   console.log(this[photos])
    next();
-} */
+}); 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// EXPORT
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 const User = mongoose.model("User", userSchema);
 const Food = mongoose.model("Food", foodSchema);

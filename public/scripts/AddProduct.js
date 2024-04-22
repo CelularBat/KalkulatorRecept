@@ -7,123 +7,129 @@ const addPrForm = document.getElementById("addPrForm");
 var _g_editTarget = {};
 var _g_submitTarget = "";
 
-function InitFormBtns() {  
-    btn_update.addEventListener("click",()=>{
+function InitFormBtns() {
+  btn_update.addEventListener("click", () => {
     _g_submitTarget = "update";
     btn_update.style.display = "none";
     btn_add.style.display = "block";
   });
-  
-  btn_add.addEventListener("click",()=>{
+
+  btn_add.addEventListener("click", () => {
     _g_submitTarget = "add";
   });
-  
-  btn_cleanForm.addEventListener("click",()=>{
+
+  btn_cleanForm.addEventListener("click", () => {
     addPrForm.reset();
   });
-  
+
 }
 InitFormBtns();
 
 
-function btn_edit_Init(btn,tr,th_footer) {
-  btn.addEventListener('click',()=>{
-      const row = tr.querySelectorAll('td');
-      const row_footer = th_footer.querySelectorAll('th');
-      // if- any new column will be added at the beginning, lines below must change
-      _g_editTarget = {name: row[1].textContent, brand:row[2].textContent};
-      
-      row_footer.forEach((x,idx)=>{
-        
-        let inp = document.querySelector(`input[id^=${x.textContent}]`);
-        console.log(inp.type ,inp);
-        if (inp && (inp.type != "checkbox")) {
-          
-          inp.value = row[idx].textContent;
-        } else if (inp.type == "checkbox") {
-          if (row[idx].textContent == "true"){
-            inp.checked = true;
-          }
+function btn_edit_Init(btn, tr, th_footer) {
+  btn.addEventListener('click', () => {
+    const row = tr.querySelectorAll('td');
+    const row_footer = th_footer.querySelectorAll('th');
+    // if- any new column will be added at the beginning, lines below must change
+    _g_editTarget = { name: row[1].textContent, brand: row[2].textContent };
+
+    row_footer.forEach((x, idx) => {
+
+      let inp = document.querySelector(`input[id^=${x.textContent}]`);
+      console.log(inp.type, inp);
+      if(inp && (inp.type != "checkbox")) {
+
+        inp.value = row[idx].textContent;
+      } else if(inp.type == "checkbox") {
+        if(row[idx].textContent == "true") {
+          inp.checked = true;
         }
-      });
-      btn_add.style.display = "none";
-      btn_update.style.display = "block";
+      }
+    });
+    btn_add.style.display = "none";
+    btn_update.style.display = "block";
   });
 }
 
-function btn_delete_Init(btn,tr) {
-  btn.addEventListener('click',()=>{
-      const row = tr.querySelectorAll('td');
-      let rowToDelete = {name: row[1].textContent, brand:row[2].textContent};
-      let confirm = window.confirm(`Do you really want to remove product: ${rowToDelete.name} ${rowToDelete.brand} ?`);
-      if (!confirm) {
-        return;
-      }
-      fetch("/api/removep", {
-      method: "POST",
-      body: JSON.stringify(rowToDelete),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    }).then((response) => response.json()).then((response)=>{
-          if (response['status'] == 1) { 
+function btn_delete_Init(btn, tr) {
+  btn.addEventListener('click', () => {
+    const row = tr.querySelectorAll('td');
+    let rowToDelete = { name: row[1].textContent, brand: row[2].textContent };
+    let confirm = window.confirm(`Do you really want to remove product: ${rowToDelete.name} ${rowToDelete.brand} ?`);
+    if(!confirm) {
+      return;
+    }
+    fetch("/api/removep", {
+        method: "POST",
+        body: JSON.stringify(rowToDelete),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        }
+      })
+      .then((response) => response.json())
+      .then((response) => {
+        if(response['status'] == 1) {
           updateDatatable(_g_tableUser);
         } else
         {
           alert(response['msg']);
-        }    
-    });
+        }
+      });
   });
 }
 
-document.addEventListener("submit",function(event){
+document.addEventListener("submit", function(event) {
   event.preventDefault();
   let dataJSON = {};
   const data = new FormData(event.target);
-  data.forEach((value,key)=>{
+  data.forEach((value, key) => {
     dataJSON[key] = value;
-    });
-  
-  if (_g_submitTarget == ("add") ) {
+  });
+
+  if(_g_submitTarget == ("add")) {
     fetch("/api/addp", {
-      method: "POST",
-      body: JSON.stringify(dataJSON),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    }).then((response) => response.json()).then((response)=>{
-        if (response['status'] == 1) {
+        method: "POST",
+        body: JSON.stringify(dataJSON),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        }
+      })
+      .then((response) => response.json())
+      .then((response) => {
+        if(response['status'] == 1) {
           // What to do with DOM after we succeeded
           updateDatatable(_g_tableUser);
-          addPrForm.reset(); 
+          addPrForm.reset();
         } else
         {
           alert(response['msg']);
         }
-    });
-  } else if (_g_submitTarget == "update") {
-      dataJSON.target = _g_editTarget;
-      fetch("/api/updatep", {
-      method: "POST",
-      body: JSON.stringify(dataJSON),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    }).then((response) => response.json()).then((response)=>{
-        if (response['status'] == 1) {
+      });
+  } else if(_g_submitTarget == "update") {
+    dataJSON.target = _g_editTarget;
+    fetch("/api/updatep", {
+        method: "POST",
+        body: JSON.stringify(dataJSON),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        }
+      })
+      .then((response) => response.json())
+      .then((response) => {
+        if(response['status'] == 1) {
           // What to do with DOM after we succeeded
           updateDatatable(_g_tableUser);
-          addPrForm.reset(); 
+          addPrForm.reset();
         } else
         {
           alert(response['msg']);
         }
-    }); 
-      
+      });
+
   } else {
-      throw new Error('ERROR: unknown source of POST request');
+    throw new Error('ERROR: unknown source of POST request');
   }
-  
+
   _g_submitTarget = "";
 })
 
@@ -135,109 +141,124 @@ document.addEventListener("submit",function(event){
 var _g_tableUser, _g_tablePublic; // handles to tables
 
 function dt_getID(dataTable) {
-  return dataTable.api().table().node().id;
+  return dataTable.api()
+    .table()
+    .node()
+    .id;
 }
 
-function dt_createColumnSearch(colums_idxArr , dataTable) { //colums_idxArr,
+function dt_createColumnSearch(colums_idxArr, dataTable) { //colums_idxArr,
   // ID of passed table
-   const dtID=dt_getID(dataTable);
-   
-   // remove general search
-   $(`#${dtID}_filter`).css({display: 'none'});
-   // move <show X entries> to bottom
-   //$(`#${dtID}_length`).insertBefore(`#${dtID}_wrapper`);
-   //disapear <showing x entries>
-   $(`#${dtID}_info`).css({display: 'none'});
-   
-     
-   dataTable.api().columns().every(function(idx){
+  const dtID = dt_getID(dataTable);
+  // remove general search
+  $(`#${dtID}_filter`)
+    .css({ display: 'none' });
+  // move <show X entries> to bottom
+  //disapear <showing x entries>
+  $(`#${dtID}_info`)
+    .css({ display: 'none' });
+
+  dataTable.api()
+    .columns()
+    .every(function(idx) {
       let column = this;
-      let title = column.header().textContent;
-      
-      if (colums_idxArr.includes(idx)) {
+      let title = column.header()
+        .textContent;
+
+      if(colums_idxArr.includes(idx)) {
         // Create input element
         let input = document.createElement('input');
         input.placeholder = title;
         input.className = "searchColumnInput";
-        column.header().replaceChildren(input);
-  
+        column.header()
+          .replaceChildren(input);
+
         // Event listener for user input
         input.addEventListener('keyup', () => {
-           column.search(input.value,true).draw();      
+          column.search(input.value, true)
+            .draw();
         });
-      } 
+      }
     });
-     
+
 }
 
-function dt_createActionKeys(row,dataTable){
+function dt_createActionKeys(row, dataTable) {
   let td = document.createElement('td');
   td.className = 'action';
   let b_e = Object.assign(document.createElement('button'), {
-    className: 'btn_edit',
+    className: 'btn',
     type: 'button',
-    textContent: 'Edit'
+    textContent: '✎',
+    id: 'btn_edit'
   });
   td.appendChild(b_e);
   let b_d = Object.assign(document.createElement('button'), {
-    className: 'btn_delete',
+    className: 'btn',
     type: 'button',
-    textContent:'X'
-  }); 
+    textContent: 'X',
+    id: 'btn_delete'
+  });
   td.appendChild(b_d);
   row.appendChild(td);
-  
-  let th_footer = dataTable.api().table().footer().getElementsByTagName('tr')[0];
-  btn_edit_Init(b_e,row,th_footer);
-  btn_delete_Init(b_d,row); 
+
+  let th_footer = dataTable.api()
+    .table()
+    .footer()
+    .getElementsByTagName('tr')[0];
+  btn_edit_Init(b_e, row, th_footer);
+  btn_delete_Init(b_d, row);
 }
 
 function GetUserProducts() {
-  //var th_header = $('#dataTable thead tr')[0];
-  
-  fetch('/api/getuserp').then(response=>response.json()).then( (response)=>{
-    
-     _g_tableUser = $('#dataTable').DataTable({
-             
-           data: response,
-           columns: [
-               { data: 'category' },
-               { data: 'name' },
-               { data: 'brand' },
-               { data: 'kj' },
-               { data: 'kcal' },
-               { data: 'fat' },
-               { data: 'carb' },
-               { data: 'sugar' },
-               { data: 'protein' },
-               { data: 'fiber' },
-               { data: 'salt' },
-               {data: 'public'}
-           ],
-           columnDefs: [{
-              target: 11,
-              render: function(data, type, row, meta){
-                console.log(data,row);
-                if (JSON.parse(data)) {
-                  return '<img name="true" src="public.png" width="17" height="17" class="icon_padlock">Tak</img>';
-                } else{
-                  return '<img name="false" src="padlock.png"  width="17" height="17" class="icon_public">Nie</img>';
-                }
-                
+  fetch('/api/getuserp')
+    .then(response => response.json())
+    .then((response) => {
+
+      _g_tableUser = $('#dataTable')
+        .DataTable({
+
+          data: response,
+          language: { url: 'https://cdn.datatables.net/plug-ins/2.0.5/i18n/pl.json' },
+          dom: 'lp',
+          columns: [
+            { data: 'category' },
+            { data: 'name' },
+            { data: 'brand' },
+            { data: 'kj' },
+            { data: 'kcal' },
+            { data: 'fat' },
+            { data: 'carb' },
+            { data: 'sugar' },
+            { data: 'protein' },
+            { data: 'fiber' },
+            { data: 'salt' },
+            { data: 'public' }
+          ],
+          columnDefs: [{
+            target: 11,
+            render: function(data, type, row, meta) {
+              console.log(data, row);
+              if(JSON.parse(data)) {
+                return '<img name="true" src="public.png" width="17" height="17" class="icon_padlock">Tak</img>';
+              } else {
+                return '<img name="false" src="padlock.png"  width="17" height="17" class="icon_public">Nie</img>';
               }
-           }],
-           
-           // Add action buttons to row
-          "createdRow": function( row, data, dataIndex ) {
-              dt_createActionKeys(row, this);
-          },      
-          "initComplete": function () {
-            dt_createColumnSearch([0,1,2],this);
-            
+
+            }
+          }],
+
+          // Add action buttons to row
+          "createdRow": function(row, data, dataIndex) {
+            dt_createActionKeys(row, this);
+          },
+          "initComplete": function() {
+            dt_createColumnSearch([0, 1, 2], this);
+
           }
-       });
-   
-    return;
+        });
+
+      return;
     });
 }
 
@@ -245,39 +266,46 @@ GetUserProducts();
 
 function GetPublicProducts() {
   var th_header = $('#dataTablePub')
-  fetch('/api/getpubp').then(response=>response.json()).then( (response)=>{
-      _g_tablePublic=$('#dataTablePub').DataTable({
-      
-           data: response,
-           columns: [
-               { data: 'category' },
-               { data: 'name' },
-               { data: 'brand' },
-               { data: 'kj' },
-               { data: 'kcal' },
-               { data: 'fat' },
-               { data: 'carb' },
-               { data: 'sugar' },
-               { data: 'protein' },
-               { data: 'fiber' },
-               { data: 'salt' },
-               { data: 'author' }
-           ],
-           "initComplete": function () {
-            dt_createColumnSearch([0,1,2,11],this); 
+  fetch('/api/getpubp')
+    .then(response => response.json())
+    .then((response) => {
+      _g_tablePublic = $('#dataTablePub')
+        .DataTable({
+
+          data: response,
+          language: { url: 'https://cdn.datatables.net/plug-ins/2.0.5/i18n/pl.json' },
+          dom: 'lp',
+          columns: [
+            { data: 'category' },
+            { data: 'name' },
+            { data: 'brand' },
+            { data: 'kj' },
+            { data: 'kcal' },
+            { data: 'fat' },
+            { data: 'carb' },
+            { data: 'sugar' },
+            { data: 'protein' },
+            { data: 'fiber' },
+            { data: 'salt' },
+            { data: 'author' }
+          ],
+          "initComplete": function() {
+            dt_createColumnSearch([0, 1, 2, 11], this);
           }
-          
-       });
-    return;
+
+        });
+      return;
     });
 }
 
 GetPublicProducts();
-function updateDatatable(datatable) {
-    fetch('/api/getuserp').then(response=>response.json()).then((response)=>{
-    datatable.clear();
-    datatable.rows.add(response);
-    datatable.draw();
-  });    
-}
 
+function updateDatatable(datatable) {
+  fetch('/api/getuserp')
+    .then(response => response.json())
+    .then((response) => {
+      datatable.clear();
+      datatable.rows.add(response);
+      datatable.draw();
+    });
+}

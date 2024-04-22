@@ -1,4 +1,4 @@
-const {unregisteredAccountName} = require('./config');
+const {c_UnregisteredAccountName} = require('./config');
 
 function FoodAPI_Setup(app,Food) {
  
@@ -50,12 +50,12 @@ function FoodAPI_Setup(app,Food) {
       let u = req.session.userId;
       if (u) {
         p.author = u; 
-      } else {  //we are dubling author.default key here, but anyway
-        p.author = unregisteredAccountName;
+      } else {  //we are doubling author.default key here, but anyway
+        p.author = c_UnregisteredAccountName;
       }
       
       if (! p.public) {
-        p.public = false; //dirty fix for.stupid checkboxes not submiting when unchecked
+        p.public = false; //dirty fix for stupid checkboxes submiting nothing when unchecked
       }
       AddProduct(p,(msg,status)=>{
         res.json({msg: msg, status:status});
@@ -66,10 +66,10 @@ function FoodAPI_Setup(app,Food) {
       let p =req.body;
       let u = req.session.userId;
       if (!u) {
-        u = unregisteredAccountName;
+        u = c_UnregisteredAccountName;
       }
       if (! p.public) {
-        p.public = false; //dirty fix for.stupid checkboxes not submiting when unchecked
+        p.public = false; //dirty fix for stupid checkboxes submiting nothing when unchecked
       }
       let target = p['target'];
       delete p['target'];
@@ -82,7 +82,7 @@ function FoodAPI_Setup(app,Food) {
       let target =req.body;
       let u = req.session.userId;
       if (!u) {
-        u = unregisteredAccountName;
+        u = c_UnregisteredAccountName;
       }   
       RemoveProduct(target,u,(msg,status)=>{
           res.json({msg: msg, status:status}); 
@@ -92,14 +92,14 @@ function FoodAPI_Setup(app,Food) {
   app.get("/api/getuserp",(req,res)=>{
       let u = req.session.userId;
       if (!u) {
-        u = unregisteredAccountName;
+        u = c_UnregisteredAccountName;
       }
       console.log(u);
-      Food.find({author:u},(err,recipes)=>{
+      Food.find({author:u},(err,user_products)=>{
         if (err) {
           
         } else {
-          res.json(recipes);    
+          res.json(user_products);    
         }    
       });  
     });
@@ -107,7 +107,7 @@ function FoodAPI_Setup(app,Food) {
   app.get("/api/getpubp",(req,res)=>{
       let u = req.session.userId;
       if (!u) {
-        u = unregisteredAccountName;
+        u = c_UnregisteredAccountName;
       } 
       Food.find({author:{$ne: u},public:{$ne: false} },(err,products)=>{
         if (err) {

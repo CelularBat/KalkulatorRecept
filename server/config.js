@@ -1,4 +1,4 @@
-exports.unregisteredAccountName = "NIEZALOG";
+exports.c_UnregisteredAccountName = "NIEZALOG";
 exports.categories = [
                       "warzywa",
                       "owoce",

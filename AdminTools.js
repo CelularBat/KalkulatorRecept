@@ -6,8 +6,8 @@ const fs = require("fs");
 function RemoveAllExcept(Model,except) {
   var exceptQuery = {};
   for (let key in except){
-    let negator = Array.isArray(except[key])?'$nin':'$ne';
-    exceptQuery[`${key}`]={[negator]: except[key]};
+    let negator = Array.isArray(except[key]) ? '$nin' : '$ne';
+    exceptQuery[ `${key}`] = { [negator]: except[key] };
     }; 
   console.log(exceptQuery);
  
@@ -22,8 +22,8 @@ function RemoveAllExcept(Model,except) {
 function PrintAllExcept(Model,except) {
   var exceptQuery = {};
   for (let key in except){
-    let negator = Array.isArray(except[key])?'$nin':'$ne';
-    exceptQuery[`${key}`]={[negator]: except[key]};
+    let negator = Array.isArray(except[key]) ? '$nin' : '$ne';
+    exceptQuery[ `${key}`] = { [negator]: except[key] };
     }; 
   console.log(exceptQuery);
  
@@ -68,8 +68,6 @@ function importFoodFromFile(FoodModel,File,category,author,brand) {
       jsonArr.push(a);
     });
     
-  
-    
     FoodModel.insertMany(jsonArr,(err,data)=>{
       err?
         console.log("Error: ",err)
@@ -90,13 +88,45 @@ function AddLackingKeysToModel(Model,key,defaultValue=null){
     err?
         console.log("Error: ",err)
         :console.log("Database added: ",data);  
-  });
-  
+  }); 
+}
+
+function FindAndReplaceAllDocs(Model,Filter,Key,ToFind,ReplaceWith) {
+  console.log(`Changing all instances of ${Key}: "${ToFind}" with "${ReplaceWith}" in records fitting to query ${Filter}`);
+  let query = __parseQueryArray(Filter);
+  query[Key] =  ToFind;
+
+  console.log(query);    
+  Model.updateMany(query,{[Key]: ReplaceWith},(err,data)=>{
+    err?
+        console.log("Error: ",err)
+        :console.log("Database added: ",data);  
+  }); 
+}
+
+function __parseQueryArray(Query,doExclude = false) {
+  var resultQuery= {};
+  if (doExclude) {
+    for (let key in Query){
+      let negator = Array.isArray(Query[key]) ? '$nin' : '$ne';
+      resultQuery[key] = { [negator]: Query[key] };
+    }; 
+  } else {
+      for (let key in Query){
+        if ( Array.isArray(Query[key]) ) {
+            resultQuery[key] = { '$in': Query[key] };
+        } else {
+          resultQuery[key] = Query[key];  
+        }    
+      };   
+  }
+  return resultQuery;
 }
 
 module.exports = {
   RemoveAllExcept,
   PrintAllExcept,
   importFoodFromFile,
-  AddLackingKeysToModel
+  AddLackingKeysToModel,
+  FindAndReplaceAllDocs
 }
