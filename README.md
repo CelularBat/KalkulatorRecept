@@ -3,4 +3,4 @@ Projekt pozwalający społeczności użytkowników na dodawanie produktów wraz 
 Projekt ma ułatwiać wspłódzielenie pomysłów na przepisy przy restrykcyjnych dietach, takich jak dieta ketogeniczna, dieta wegańska niskowęglowodanowa ,czy inne wymagające diety eliminacyjne.
 
 Podgląd projektu (z przykładową bazą danych):
-https://fluttering-jumbled-geology.glitch.me
+https://bronze-ripple-octopus.glitch.me/addproduct
