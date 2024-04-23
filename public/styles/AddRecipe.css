@@ -72,3 +72,9 @@ table.dataTable tbody td {
 .btn_add:active {
   background: linear-gradient(0deg, rgba(20,67,62,1) 0%, rgba(102,47,113,1) 100%);
 }
+
+/* Recipe Tables */
+
+#RecipeCalc{
+  background: linear-gradient(to top, LightSeaGreen, white);
+}

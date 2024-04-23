@@ -1,4 +1,64 @@
-var _g_tableUser, _g_tablePublic, _g_tableRecipe; // handles to tables
+var _g_tableUser, _g_tablePublic, _g_tableRecipe ,_g_tableCalc; // handles to tables
+
+
+// internal memory Recipe Container
+class RecipeContainer {
+    constructor() {      
+        this.length = 0; 
+        this.recipeFullJSONArray = [];
+        this.calcResultIntArray = [];
+        this.calcResultJSON = {kj: 0, kcal: 0, fat:0, carb: 0, sugar:0, protein:0, fiber:0, salt:0};
+    }
+    _calcResult_reset(){
+       this.calcResultJSON = {kj: 0, kcal: 0, fat:0, carb: 0, sugar:0, protein:0, fiber:0, salt:0};
+    }
+    _getPortion(row_idx){
+        let cell = _g_tableRecipe.cell({row: row_idx, column: 2}).node();
+        let p = cell.querySelector('input').value;
+        return p;
+    }
+  
+    _recalculate(){
+      this._calcResult_reset();
+      for (let i = 0 ; i < this.recipeFullJSONArray.length; i++) {
+        let r = this.recipeFullJSONArray[i];
+        var portion = 0;
+        try { //here is a bug, sometimes when clicking buttons fast then array isn't deleted from internal array
+              //causing later out of index error (table index is smaller then) - need investigation
+          portion = this._getPortion(i);
+        } catch(e) {
+          console.error(e);
+          console.log(this.length,i,this.recipeFullJSONArray[i]);
+        }
+        
+        for (let row_key in r) {
+          for (let key in this.calcResultJSON){
+            if (row_key == key) {
+              let toAdd = Number( (portion/100 * r[row_key]).toFixed(3) );
+              this.calcResultJSON[key] = Number((this.calcResultJSON[key] + toAdd).toFixed(3));
+              
+            }
+          }
+        }      
+      }
+      console.log(this.calcResultJSON);
+      _g_tableCalc.row(0).data(this.calcResultJSON).draw();
+    }
+    
+    push(rowJSON,row_idx){ 
+      this.length++;
+      this.recipeFullJSONArray.push(rowJSON);
+      this._recalculate();
+    }
+
+    remove(row_idx){
+      this.length--;
+      this.recipeFullJSONArray.splice(row_idx,1);
+      this._recalculate();
+    }
+}
+
+var _g_recipeContainer = new RecipeContainer();
 
 function dt_getID(dataTable) {
   return dataTable.api().table().node().id;
@@ -28,20 +88,40 @@ function dt_createColumnSearch(colums_idxArr , dataTable) { //colums_idxArr,
      
 }
 
+function btn_add_Init(btn,data) {
+  btn.addEventListener("click", (event) => {
+    let dataForRecipe = { name: data.name, brand: data.brand, portion:input_Porcja_str, portion_list: ''};    
+    let newRow = _g_tableRecipe.row.add(dataForRecipe).draw().node();
+    let newRow_idx = _g_tableRecipe.row(newRow).index();
+    
+    
+    let b_d = Object.assign(document.createElement('button'), {
+        className: 'btn_del',
+        type: 'button',
+        textContent: 'X'
+     });
+    
+      b_d.addEventListener('click', function(){
+        _g_tableRecipe.row($(newRow)).remove().draw();
+        _g_recipeContainer.remove(newRow_idx);
+        
+     });
+  
+    $(newRow).find('td:last').append(b_d);
+    _g_recipeContainer.push(data, newRow_idx);
+    
+    
+  });
+}
+
 function dt_insertAddButton(row,data,dataTable){
   let b_a = Object.assign(document.createElement('button'), {
     className: 'btn_add',
     type: 'button',
     textContent: '＋'
-  
   });
-  let th_footer = dataTable.api()
-    .table()
-    .footer()
-    .getElementsByTagName('tr')[0];
-    
-  btn_add_Init(b_a,data,th_footer);
-  
+
+  btn_add_Init(b_a,data);
   let td = row.cells[0];
   td.appendChild(b_a);
 }
@@ -140,34 +220,20 @@ function updateDatatable(datatable) {
 }
 
 /* RecipeList */
-function dt_insertDelButton(row,dataTable){
-  let b_a = Object.assign(document.createElement('button'), {
-    className: 'btn_del',
-    type: 'button',
-    textContent: 'X',
-    color:red
-  });
+
+
+function input_maxLengthControl(object) {
+  let maxLength = 4;
+  if (object.value.length > maxLength) {
+    object.value = object.value.slice(0, maxLength);
+  } else {
+    _g_recipeContainer._recalculate();
+  }
   
-  let td = row.cells[0];
-  td.appendChild(b_a);
 }
+const input_Porcja_str = '<input name="portion" class="input_portion" step="1" value="100" style="max-width: 60px;" type="number" oninput="input_maxLengthControl(this)">';
 
-const input_Porcja_str = '<input type="number" name="portion" class="input_portion" required step="1" required pattern="^\d+$">';
 
-function btn_add_Init(btn,data, th_footer) {
-  btn.addEventListener("click", (event) => {
-    let dataForRecipe = { name: data.name, brand: data.brand, portion:input_Porcja_str, portion_list: ''};    
-    let newRow = _g_tableRecipe.row.add(dataForRecipe).draw().node();
-    
-    let b_d = Object.assign(document.createElement('button'), {
-        className: 'btn_del',
-        type: 'button',
-        textContent: 'X'
-     });
-    
-    $(newRow).find('td:last').append(b_d);
-  });
-}
 
 
 
@@ -186,13 +252,33 @@ function CreateRecipeTable() {
          { "data": 'portion_list', "defaultContent": ""},
         { "data": null, "defaultContent": "", "orderable": false}
                 
-      ],
-      "initComplete": function () {            
-                                      
-        }
-     
+      ]
+
   });
 
 }
 
 CreateRecipeTable() ;
+
+function CreateCalcTable(){
+  _g_tableCalc = $("#dataTableCalc").DataTable({
+      dom: '',
+      pageLength: 10,
+      autoWidth: false,
+      data: [{kj: 0, kcal: 0, fat:0, carb: 0, sugar:0, protein:0, fiber:0, salt:0}],
+      columns: [
+               { data: 'kj' , "defaultContent": "", "orderable": false},
+               { data: 'kcal' , "defaultContent": "", "orderable": false},
+               { data: 'fat', "defaultContent": "" , "orderable": false},
+               { data: 'carb' , "defaultContent": "", "orderable": false},
+               { data: 'sugar' , "defaultContent": "", "orderable": false},
+               { data: 'protein' , "defaultContent": "", "orderable": false},
+               { data: 'fiber' , "defaultContent": "", "orderable": false},
+               { data: 'salt', "defaultContent": "", "orderable": false }          
+      ]
+
+     
+  });
+}
+
+CreateCalcTable();

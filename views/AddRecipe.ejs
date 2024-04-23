@@ -1,6 +1,5 @@
-<html>
-<head>
-     <%- include('partials/head_meta')  -%>  
+
+<%- include('partials/head_meta')  -%>  
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/sp-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet"> 
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/sp-2.2.0/sl-1.7.0/datatables.min.js"></script>
@@ -48,9 +47,39 @@
                     </tfoot>
                 </table>
             </div>
+            
+            <div id="RecipeCalc" class="divsub">
+                 <h3>Razem:</h3>
+                <table id="dataTableCalc" class="display">
+                    <thead>
+                        <tr>
+                            <th>kj</th>
+                            <th>kcal</th>
+                            <th>Tłu</th>
+                            <th>Węg</th>
+                            <th>Cuk</th>
+                            <th>Bia</th>
+                            <th>Bło</th>
+                            <th>Sól</th>                   
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="RecipeDescription" class="divsub">
+                 <h3>Dodaj Opis</h3>
+                
+            </div>
+            
+            <div id="RecipePhotos" class="divsub">
+                 <h3>Dołącz Zdjęcia</h3>
+                
+            </div>
         </div>
         
-        
+   <!--   --------------------------  ----------------------------------------------------------------------->     
         <div class="divseparator"></div>
         
         
