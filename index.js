@@ -163,8 +163,8 @@ FoodAPI_Setup(app,Food);
 // ADMIN TOOLS
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 adm = require("./AdminTools");
-//adm.importFoodFromFile(Food,'baza.txt',"nabiał","baza","podstawowa");
+//adm.importFoodFromFile(Food,'baza.txt',"baza","ogólne");
  //adm.PrintAllExcept(Food,{} );
- //adm.AddLackingKeysToModel(Food,"sugar");
+ //adm.AddLackingKeysToModel(Food,"salt");
 //adm.FindAndReplaceAllDocs(Food,{author: ['test','baza']},'brand','podstawowa','ogólne');
-adm.RemoveAllExcept(Food,{author:['NIEZALOG','adam']});
+//adm.RemoveAllExcept(Food,{author:['NIEZALOG','adam']});

@@ -1,4 +1,4 @@
-var _g_tableUser, _g_tablePublic; // handles to tables
+var _g_tableUser, _g_tablePublic, _g_tableRecipe; // handles to tables
 
 function dt_getID(dataTable) {
   return dataTable.api().table().node().id;
@@ -7,15 +7,7 @@ function dt_getID(dataTable) {
 function dt_createColumnSearch(colums_idxArr , dataTable) { //colums_idxArr,
   // ID of passed table
    const dtID=dt_getID(dataTable);
-   
-   // remove general search
-   //$(`#${dtID}_filter`).css({display: 'none'});
-   // move <show X entries> to bottom
-   //$(`#${dtID}_length`).insertBefore(`#${dtID}_wrapper`);
-   //disapear <showing x entries>
-   //$(`#${dtID}_info`).css({display: 'none'});
-   
-     
+      
    dataTable.api().columns().every(function(idx){
       let column = this;
       let title = column.header().textContent;
@@ -36,17 +28,22 @@ function dt_createColumnSearch(colums_idxArr , dataTable) { //colums_idxArr,
      
 }
 
-function dt_insertActionKeys(row,dataTable){
+function dt_insertAddButton(row,data,dataTable){
   let b_a = Object.assign(document.createElement('button'), {
-    className: 'btn',
+    className: 'btn_add',
     type: 'button',
-    textContent: '＋',
-    id: 'btn_add'
+    textContent: '＋'
+  
   });
+  let th_footer = dataTable.api()
+    .table()
+    .footer()
+    .getElementsByTagName('tr')[0];
+    
+  btn_add_Init(b_a,data,th_footer);
   
   let td = row.cells[0];
   td.appendChild(b_a);
-
 }
 
 function GetUserProducts() {
@@ -76,12 +73,14 @@ function GetUserProducts() {
 
            // Add action buttons to row
           "createdRow": function( row, data, dataIndex ) {
-             dt_insertActionKeys(row,dataTable);    
+             dt_insertAddButton(row,data,this);    
           },
           
           "initComplete": function () {
-            dt_createColumnSearch([1,2,3],this);     
-          }
+            dt_createColumnSearch([1,2,3],this);
+           
+          },
+          order: [[ 1, "desc" ]]
           
        });
    
@@ -117,11 +116,12 @@ function GetPublicProducts() {
            ],
            // Add action buttons to row
            "createdRow": function( row, data, dataIndex ) {
-              dt_insertActionKeys(row, this);
+              dt_insertAddButton(row,data, this);
            },
            
            "initComplete": function () {
-            dt_createColumnSearch([1,2,3,12],this); 
+            dt_createColumnSearch([1,2,3,12],this);
+            
           }
           
        });
@@ -130,6 +130,7 @@ function GetPublicProducts() {
 }
 
 GetPublicProducts();
+
 function updateDatatable(datatable) {
     fetch('/api/getuserp').then(response=>response.json()).then((response)=>{
     datatable.clear();
@@ -137,3 +138,61 @@ function updateDatatable(datatable) {
     datatable.draw();
   });    
 }
+
+/* RecipeList */
+function dt_insertDelButton(row,dataTable){
+  let b_a = Object.assign(document.createElement('button'), {
+    className: 'btn_del',
+    type: 'button',
+    textContent: 'X',
+    color:red
+  });
+  
+  let td = row.cells[0];
+  td.appendChild(b_a);
+}
+
+const input_Porcja_str = '<input type="number" name="portion" class="input_portion" required step="1" required pattern="^\d+$">';
+
+function btn_add_Init(btn,data, th_footer) {
+  btn.addEventListener("click", (event) => {
+    let dataForRecipe = { name: data.name, brand: data.brand, portion:input_Porcja_str, portion_list: ''};    
+    let newRow = _g_tableRecipe.row.add(dataForRecipe).draw().node();
+    
+    let b_d = Object.assign(document.createElement('button'), {
+        className: 'btn_del',
+        type: 'button',
+        textContent: 'X'
+     });
+    
+    $(newRow).find('td:last').append(b_d);
+  });
+}
+
+
+
+function CreateRecipeTable() {
+  
+  _g_tableRecipe = $("#dataTable_recipe").DataTable({
+      language: { url: 'https://cdn.datatables.net/plug-ins/2.0.5/i18n/pl.json'},
+      dom: '',
+      pageLength: 100,
+      autoWidth: false,
+      data: [],
+      columns: [
+         { "data": 'name', "defaultContent": ""},
+         { "data": 'brand', "defaultContent": ""},
+         { "data": 'portion', "defaultContent": ""},
+         { "data": 'portion_list', "defaultContent": ""},
+        { "data": null, "defaultContent": "", "orderable": false}
+                
+      ],
+      "initComplete": function () {            
+                                      
+        }
+     
+  });
+
+}
+
+CreateRecipeTable() ;

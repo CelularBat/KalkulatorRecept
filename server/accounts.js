@@ -142,7 +142,10 @@ const AccountManagerSetup = (app, User) => {
       req.session.destroy(err => {
         if (err) {
           console.error('Error destroying session:', err);
+        } else {
+          res.json({msg: 'You are not logged out'});
         }
+        
       });
     });
   

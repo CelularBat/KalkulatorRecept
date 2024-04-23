@@ -39,7 +39,7 @@ function PrintAllExcept(Model,except) {
 // name;kj;fat;carb;protein;fiber#
 // file must be in utc-8
 
-function importFoodFromFile(FoodModel,File,category,author,brand) {  
+function importFoodFromFile(FoodModel,File,author,brand) {  
   try {
     const data = fs.readFileSync(File, 'utf-8');
     let arr =[];
@@ -52,16 +52,16 @@ function importFoodFromFile(FoodModel,File,category,author,brand) {
   if (arr) {
     jsonArr = [];
     arr.forEach((x)=>{
-      let kjFromKcal = Math.round(x[1]*4.184);
+      let kjFromKcal = Math.round(x[2]*4.184);
       let a = {
-        name: x[0],
-        kcal: x[1],
+        name: x[1],
+        kcal: x[2],
         kj: kjFromKcal,
-        fat: x[2],
-        carb: x[3],
-        protein: x[4],
-        fiber: x[5],
-        category: category,
+        fat: x[4],
+        carb: x[5],
+        protein: x[3],
+        fiber: x[6],
+        category: x[0],
         author: author,
         brand: brand       
       }
@@ -70,7 +70,7 @@ function importFoodFromFile(FoodModel,File,category,author,brand) {
     
     FoodModel.insertMany(jsonArr,(err,data)=>{
       err?
-        console.log("Error: ",err)
+        console.log("Error: ",jsonArr,err)
         :console.log("Database added: ",data);
       });
   }

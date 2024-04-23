@@ -35,7 +35,7 @@ padding-bottom: 10px;
 table {
   display: inline-table;
   font-size: 90%;
-  max-width: 100%;
+  max-width: 95%;
 }
 
 table.dataTable tbody th,
@@ -48,7 +48,7 @@ table.dataTable tbody td {
   padding: .1em 0.5em !important;
 }
 
-#btn_add {
+.btn_add {
   display: flex;
   align-items: center;
   font-family: inherit;
@@ -65,10 +65,10 @@ table.dataTable tbody td {
   padding: 1px 4px 1px 4px;
 }
 
-#btn_add:hover {
+.btn_add:hover {
   background: linear-gradient(0deg, rgba(20,67,62,1) 0%, rgba(102,47,113,1) 100%);
 }
 
-#btn_add:active {
+.btn_add:active {
   background: linear-gradient(0deg, rgba(20,67,62,1) 0%, rgba(102,47,113,1) 100%);
 }

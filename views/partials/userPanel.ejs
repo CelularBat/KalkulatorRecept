@@ -8,7 +8,11 @@
               headers: {
                 "Content-type": "application/json; charset=UTF-8"
               }
-            });
+            })
+            .then( ()=> {
+                location.reload();
+            } );
+            
         }
     </script>
 <p>Hello <%= USER %>, you are logged in!</p>

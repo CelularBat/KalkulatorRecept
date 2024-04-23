@@ -1,7 +1,7 @@
 const btn_add = document.getElementById("btn_add");
 const btn_update = document.getElementById("btn_update");
 const btn_cleanForm = document.getElementById("btn_cleanForm");
-const addPrForm = document.getElementById("addPrForm");
+const form_productsAdd = document.getElementById("addPrForm");
 
 
 var _g_editTarget = {};
@@ -30,19 +30,23 @@ function btn_edit_Init(btn, tr, th_footer) {
   btn.addEventListener('click', () => {
     const row = tr.querySelectorAll('td');
     const row_footer = th_footer.querySelectorAll('th');
+    // Iterate throught th footer for keys, then find those keys in html form and change values
+    
     // if- any new column will be added at the beginning, lines below must change
     _g_editTarget = { name: row[1].textContent, brand: row[2].textContent };
 
     row_footer.forEach((x, idx) => {
-
-      let inp = document.querySelector(`input[id^=${x.textContent}]`);
-      console.log(inp.type, inp);
-      if(inp && (inp.type != "checkbox")) {
-
-        inp.value = row[idx].textContent;
-      } else if(inp.type == "checkbox") {
-        if(row[idx].textContent == "true") {
-          inp.checked = true;
+      let form_element = document.querySelector(`input[id^=${x.textContent}]`);
+      //console.log(row[idx].textContent,form_element.type, form_element);
+      if(form_element && (form_element.type != "checkbox")) {
+        form_element.value = row[idx].textContent;
+      }
+      else if(form_element.type == "checkbox") {
+        if(row[idx].textContent == "Tak") {
+          form_element.checked = true;
+        }
+        else {
+          form_element.checked = false;
         }
       }
     });
@@ -291,7 +295,9 @@ function GetPublicProducts() {
           ],
           "initComplete": function() {
             dt_createColumnSearch([0, 1, 2, 11], this);
-          }
+          },
+          
+          order: [[ 1, "desc" ]]
 
         });
       return;
